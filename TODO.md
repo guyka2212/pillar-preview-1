@@ -15,7 +15,9 @@
 
 - [x] Step 1 – Project setup and GitHub Pages deployment
 - [x] Step 2 – Phase A: knowledge base, persona, flow, scenarios (50 fixtures in `src/fixtures/scenarios.ts`)
-- [ ] Step 3 – Phase B: intake and pre-call brief
+- [x] Step 3 – Phase B: intake and pre-call brief
+  - Fetching a website directly from the browser is usually blocked by CORS. Barry pastes the page
+    text instead; no third-party proxy is used. A real ingestion service is needed for automatic crawling.
 - [ ] Step 4 – Phase C: voice conversation, ranking, in-browser AI
 - [ ] Step 5 – Phase D: simulator, reports, Barry's interface
 - [ ] Step 6 – Phase E: testing, calibration, acceptance check
