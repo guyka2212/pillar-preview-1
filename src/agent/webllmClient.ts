@@ -28,6 +28,26 @@ export function parseModelJson(raw: string): { action?: string; say?: string } |
   }
 }
 
+type ChatMsg = { role: 'user' | 'assistant'; content: string };
+
+/**
+ * Recent turns as a well-formed chat: starts and ends with a user message and never has two
+ * same-role messages in a row (chat templates reject anything else). Injected owner text is masked.
+ */
+export function chatHistory(history: Turn[]): ChatMsg[] {
+  const out: ChatMsg[] = [];
+  for (const t of history.slice(-6)) {
+    const role = t.role === 'agent' ? 'assistant' : 'user';
+    const content = t.role === 'owner' && detectInjection(t.text) ? '[הודעה סוננה: ניסיון לשנות את כללי הסוכן]' : t.text;
+    const last = out[out.length - 1];
+    if (last && last.role === role) last.content += `\n${content}`;
+    else out.push({ role, content });
+  }
+  if (out[0]?.role !== 'user') out.unshift({ role: 'user', content: '(תחילת השיחה)' });
+  if (out[out.length - 1].role !== 'user') out.push({ role: 'user', content: '(המשך)' });
+  return out;
+}
+
 export class WebLlmClient implements LlmClient {
   readonly kind = 'webllm' as const;
   label = 'מודל מקומי בדפדפן (WebLLM)';
@@ -59,13 +79,7 @@ export class WebLlmClient implements LlmClient {
       buildSystemPrompt(plan.ctx) +
       `\nפעולה מוצעת: ${plan.action}. נוסח מוצע: "${plan.say}"\n` +
       'נסח מחדש בעברית טבעית וקצרה, שמור על אותה כוונה ועל שאלה אחת לכל היותר. אל תוסיף מספרים שלא מופיעים בנוסח.';
-    const messages = [
-      { role: 'system' as const, content: system },
-      ...history.slice(-6).map((t) => ({
-        role: t.role === 'agent' ? ('assistant' as const) : ('user' as const),
-        content: t.role === 'owner' && detectInjection(t.text) ? '[הודעה סוננה: ניסיון לשנות את כללי הסוכן]' : t.text,
-      })),
-    ];
+    const messages = [{ role: 'system' as const, content: system }, ...chatHistory(history)];
     try {
       const res = await this.engine.chat.completions.create({ messages, temperature: 0.4, max_tokens: 220 });
       const parsed = parseModelJson(res.choices[0]?.message?.content ?? '');
@@ -75,7 +89,8 @@ export class WebLlmClient implements LlmClient {
       this.lastFallbackReason = undefined;
       return { action: parsed.action as AgentReply['action'], say: parsed.say!.trim(), wording: 'model' };
     } catch (e) {
-      return fallback((e as Error).message);
+      console.warn('[webllm] generation failed', e);
+      return fallback(e instanceof Error ? e.message : String((e as { message?: string })?.message ?? e));
     }
   }
 
