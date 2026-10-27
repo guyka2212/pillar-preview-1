@@ -59,6 +59,9 @@ Vite `base` is `/pillar-preview-1/`, and routing uses a hash router so refreshes
 - Static hosting: no server, so no automatic website crawling (CORS), no real multi-user roles, auth or
   encryption at rest, and no CRM or calendar integration. Data stays in the visitor's browser.
 - Small local models are weaker in Hebrew than large cloud models; the first load is a large download.
+  Each agent turn shows whether the model's wording was used or rejected in favour of the planned line.
+- Model loading/generation can stall while the tab is in the background (browsers throttle WebGPU);
+  keep the tab visible while the model loads.
 - Speech recognition works best in Chrome/Edge; Hebrew TTS depends on the device's installed voices.
 - Rubric scores on the Evaluation page are automatic estimates, not expert reviews.
 - **Real-business trials (3–5 businesses) are a human step still to be done after this build**, together

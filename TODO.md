@@ -44,4 +44,13 @@
 - [x] Step 4 – Phase C: voice conversation, ranking, in-browser AI
 - [x] Step 5 – Phase D: simulator, reports, Barry's interface
 - [x] Step 6 – Phase E: testing, calibration, acceptance check
-- [ ] Step 7 – Final deployment check
+- [x] Step 7 – Final deployment check (2026-10-27)
+  - Deploy workflow green; live site serves the built app.
+  - Rule-based mode verified end to end on the live site (intake → brief → conversation → simulator → report).
+  - Phone width (375px) verified: no horizontal scroll, conversation layout stacks.
+  - WebLLM verified on the live site up to: WebGPU detection, model list, download with progress,
+    caching, and loading in the Web Worker (Qwen2.5-0.5B).
+  - [ ] **Still to check by hand:** a full conversation in WebLLM mode in a visible Chrome/Edge window,
+    including how often the model's wording passes `validateReply()` (each turn now shows
+    "ניסוח המודל" or "נוסח מתוכנן" with the rejection reason). During verification the model
+    stalled when the browser tab was in the background.

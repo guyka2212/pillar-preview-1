@@ -32,6 +32,28 @@ v3.0 (Pillar Tech, Oct 2026). Live on GitHub Pages: https://guyka2212.github.io/
 - Commit and push after every build step; keep `README.md` and `TODO.md` current.
 - PRD section 19 open decisions stay open in `TODO.md` — don't decide them silently.
 
+## Architecture map
+
+- `src/agent/orchestrator.ts` is the brain: absorbs owner turns, advances the flow
+  (`src/knowledge/flow.ts`), plans ONE action + a ready Hebrew line. LLMs only rephrase it;
+  `validateReply()` guards every model output.
+- `src/agent/extraction.ts`: Hebrew signal/number parsing. JS `\b` does not work with Hebrew —
+  use lookarounds (see `reflectText`).
+- Knowledge base: `src/knowledge/industries.ts` (5 industries × templates, question banks, sample lines).
+- Scenarios: `src/fixtures/scenarios.ts` (50) run by `src/eval/scenarios.test.ts`. Add a scenario there
+  whenever conversation behaviour changes.
+- Storage: localStorage via `src/storage/db.ts` (keys `pillar.v1.*`).
+
+## Gotchas
+
+- In React effects, wrap `scrollIntoView` in braces: newer Chrome returns a Promise from it, and React
+  will try to call it as a cleanup (blank page).
+- GitHub Pages source must be "GitHub Actions" (build_type `workflow`); "Deploy from a branch" serves
+  the unbuilt `index.html`.
+- Pushing from a non-interactive `gh codespace ssh` needs a login shell (`bash -lic "git push"`) to
+  pick up the Codespace git credentials.
+- WebLLM chat must start and end with a user message (`chatHistory()` handles it).
+
 ## Notes
 
-_Add decisions, design choices and todos here as the site grows._
+- Open PRD decisions live in `TODO.md` — don't decide them silently.
