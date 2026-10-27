@@ -37,6 +37,8 @@ export interface FlowState {
   interestedCount: number;
   ownerWantsToClose: boolean;
   justRejected: boolean;
+  /** The owner expressed interest in the idea proposed on the previous turn. */
+  newInterest: boolean;
 }
 
 export function initialFlow(): FlowState {
@@ -50,6 +52,7 @@ export function initialFlow(): FlowState {
     interestedCount: 0,
     ownerWantsToClose: false,
     justRejected: false,
+    newInterest: false,
   };
 }
 
@@ -101,7 +104,7 @@ export function advance(s: FlowState): FlowState {
       if (canProposeIdea(s) && (has(s, 'decisions') || has(s, 'exceptions') || s.turnsInStage >= 2)) move('idea');
       break;
     case 'idea':
-      if (s.interestedCount > 0 && !s.justRejected) move('quantify');
+      if (s.newInterest && !s.justRejected) move('quantify');
       else if (s.candidateCount === 0) move(s.proposedCount > 0 ? 'selection' : 'implicit');
       break;
     case 'quantify':
@@ -127,11 +130,11 @@ export function allowedActions(s: FlowState): AgentAction[] {
     case 'implicit':
       return ['reflect', 'ask', 'challenge'];
     case 'idea':
-      return canProposeIdea(s) && !s.justRejected ? ['propose', 'reflect'] : ['ask', 'reflect'];
+      return canProposeIdea(s) ? ['propose', 'reflect', 'ask'] : ['ask', 'reflect'];
     case 'quantify':
-      return canOpenSimulator(s) ? ['quantify', 'reflect'] : ['ask'];
+      return canOpenSimulator(s) ? ['quantify', 'reflect', 'ask'] : ['ask'];
     case 'selection':
-      return ['summarize', 'propose', 'ask'];
+      return canProposeIdea(s) ? ['summarize', 'propose', 'ask', 'quantify'] : ['summarize', 'ask', 'quantify'];
     case 'closing':
       return ['summarize'];
   }

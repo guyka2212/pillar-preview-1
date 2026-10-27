@@ -18,7 +18,10 @@
 - [x] Step 3 – Phase B: intake and pre-call brief
   - Fetching a website directly from the browser is usually blocked by CORS. Barry pastes the page
     text instead; no third-party proxy is used. A real ingestion service is needed for automatic crawling.
-- [ ] Step 4 – Phase C: voice conversation, ranking, in-browser AI
+- [x] Step 4 – Phase C: voice conversation, ranking, in-browser AI
+  - The LLM only rephrases the orchestrator's planned line; `validateReply()` rejects wrong actions,
+    sales pressure, >1 question, new numbers and instruction-like output, falling back to the planned line.
+  - Hebrew TTS quality depends on the voices installed on the device; STT needs Chrome/Edge.
 - [ ] Step 5 – Phase D: simulator, reports, Barry's interface
 - [ ] Step 6 – Phase E: testing, calibration, acceptance check
 - [ ] Step 7 – Final deployment check

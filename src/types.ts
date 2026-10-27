@@ -1,5 +1,7 @@
 // Shared domain types (PRD section 13 data model, adapted for in-browser storage).
 
+import type { FlowState } from './knowledge/flow';
+
 export type IndustryId = 'manufacturing' | 'retail' | 'clinic' | 'construction' | 'logistics';
 
 /** Conversation flow stages, PRD section 6 (order matters). */
@@ -140,6 +142,13 @@ export interface Assessment {
   scenarios: Scenario[];
   rejectedTemplates: string[];
   summary?: string;
+  flow: FlowState;
+  lastProposed?: string;
+  /** True after the one clarifying question that follows a "doesn't fit" answer. */
+  clarifyingRejection?: boolean;
+  impatient?: boolean;
+  /** Which engine produced the agent turns (for Barry's file). */
+  mode?: 'webllm' | 'rule';
 }
 
 export interface BusinessCase {

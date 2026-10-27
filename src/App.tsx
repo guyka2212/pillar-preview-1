@@ -3,11 +3,14 @@ import CaseDetail from './pages/CaseDetail';
 import Cases from './pages/Cases';
 import Home from './pages/Home';
 import Knowledge from './pages/Knowledge';
+import Settings from './pages/Settings';
+import Talk from './pages/Talk';
 
 const NAV = [
   { to: '/', label: 'בית' },
   { to: '/cases', label: 'תיקים (בארי)' },
   { to: '/knowledge', label: 'בסיס ידע' },
+  { to: '/settings', label: 'הגדרות' },
 ];
 
 export default function App() {
@@ -30,7 +33,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/cases" element={<Cases />} />
           <Route path="/case/:id" element={<CaseDetail />} />
+          <Route path="/case/:id/talk" element={<Talk />} />
           <Route path="/knowledge" element={<Knowledge />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>
