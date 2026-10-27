@@ -1,7 +1,11 @@
 import { NavLink, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
+import Knowledge from './pages/Knowledge';
 
-const NAV = [{ to: '/', label: 'בית' }];
+const NAV = [
+  { to: '/', label: 'בית' },
+  { to: '/knowledge', label: 'בסיס ידע' },
+];
 
 export default function App() {
   return (
@@ -21,6 +25,7 @@ export default function App() {
       <main className="content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/knowledge" element={<Knowledge />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>

@@ -14,7 +14,7 @@
 ## Build progress
 
 - [x] Step 1 – Project setup and GitHub Pages deployment
-- [ ] Step 2 – Phase A: knowledge base, persona, flow, scenarios
+- [x] Step 2 – Phase A: knowledge base, persona, flow, scenarios (50 fixtures in `src/fixtures/scenarios.ts`)
 - [ ] Step 3 – Phase B: intake and pre-call brief
 - [ ] Step 4 – Phase C: voice conversation, ranking, in-browser AI
 - [ ] Step 5 – Phase D: simulator, reports, Barry's interface
