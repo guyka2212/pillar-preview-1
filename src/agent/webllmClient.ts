@@ -50,8 +50,11 @@ export class WebLlmClient implements LlmClient {
   }
 
   async reply(plan: Plan, history: Turn[]): Promise<AgentReply> {
-    const fallback = { action: plan.action, say: plan.say };
-    if (!this.engine) return fallback;
+    const fallback = (reason: string): AgentReply => {
+      this.lastFallbackReason = reason;
+      return { action: plan.action, say: plan.say, wording: 'plan', fallbackReason: reason };
+    };
+    if (!this.engine) return fallback('model not loaded');
     const system =
       buildSystemPrompt(plan.ctx) +
       `\nפעולה מוצעת: ${plan.action}. נוסח מוצע: "${plan.say}"\n` +
@@ -68,15 +71,11 @@ export class WebLlmClient implements LlmClient {
       const parsed = parseModelJson(res.choices[0]?.message?.content ?? '');
       const owners = history.filter((t) => t.role === 'owner').map((t) => t.text);
       const check = validateReply(plan, parsed, owners);
-      if (!check.ok || !parsed) {
-        this.lastFallbackReason = check.reason;
-        return fallback;
-      }
+      if (!check.ok || !parsed) return fallback(check.reason ?? 'invalid output');
       this.lastFallbackReason = undefined;
-      return { action: parsed.action as AgentReply['action'], say: parsed.say!.trim() };
+      return { action: parsed.action as AgentReply['action'], say: parsed.say!.trim(), wording: 'model' };
     } catch (e) {
-      this.lastFallbackReason = (e as Error).message;
-      return fallback;
+      return fallback((e as Error).message);
     }
   }
 

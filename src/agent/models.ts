@@ -23,7 +23,7 @@ export function availableModels(list: ListedModel[], f16: boolean): ModelOption[
   const out: ModelOption[] = [];
   for (const fam of [...PREFERRED, ...LIGHT]) {
     const m = list.find((x) => x.model_id === `${fam}-${quant}-MLC`) ?? list.find((x) => x.model_id.startsWith(`${fam}-q4`));
-    if (m && !out.some((o) => o.id === m.model_id)) out.push({ id: m.model_id, vramMB: m.vram_required_MB, light: LIGHT.includes(fam) });
+    if (m && !out.some((o) => o.id === m.model_id)) out.push({ id: m.model_id, vramMB: m.vram_required_MB, light: !PREFERRED.includes(fam) });
   }
   return out;
 }

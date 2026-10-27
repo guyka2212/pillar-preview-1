@@ -108,6 +108,9 @@ export interface Turn {
   text: string;
   action?: AgentAction;
   stage?: Stage;
+  /** For agent turns in model mode: whose wording was used, and why the model's was rejected. */
+  wording?: 'model' | 'plan';
+  fallbackReason?: string;
   at: string;
 }
 

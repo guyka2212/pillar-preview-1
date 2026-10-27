@@ -7,6 +7,10 @@ import type { Plan } from './orchestrator';
 export interface AgentReply {
   action: AgentAction;
   say: string;
+  /** 'model' when the LLM's wording passed validation; 'plan' when the orchestrator's line was used. */
+  wording?: 'model' | 'plan';
+  /** Why the model's reply was rejected, when it was. */
+  fallbackReason?: string;
 }
 
 export interface LoadProgress {

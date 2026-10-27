@@ -215,7 +215,13 @@ export default function Talk() {
                   }}
                 >
                   {t.text}
-                  {t.role === 'agent' && t.action && <div className="small muted">{actionLabel(t.action)}</div>}
+                  {t.role === 'agent' && t.action && (
+                    <div className="small muted">
+                      {actionLabel(t.action)}
+                      {t.wording === 'model' && ' · ניסוח המודל'}
+                      {t.wording === 'plan' && ` · נוסח מתוכנן (תשובת המודל נפסלה: ${t.fallbackReason})`}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

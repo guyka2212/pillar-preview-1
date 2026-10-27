@@ -384,8 +384,8 @@ export function validateReply(plan: Plan, reply: { action?: string; say?: string
   return { ok: true };
 }
 
-export function commitAgentTurn(a: Assessment, plan: Plan, final: { action: AgentAction; say: string }) {
-  a.turns.push({ role: 'agent', text: final.say, action: final.action, stage: a.flow.stage, at: nowIso() });
+export function commitAgentTurn(a: Assessment, plan: Plan, final: { action: AgentAction; say: string; wording?: 'model' | 'plan'; fallbackReason?: string }) {
+  a.turns.push({ role: 'agent', text: final.say, action: final.action, stage: a.flow.stage, wording: final.wording, fallbackReason: final.fallbackReason, at: nowIso() });
   if (final.action === 'propose' && plan.proposalTemplateId) {
     a.lastProposed = plan.proposalTemplateId;
     const o = a.opportunities.find((x) => x.templateId === plan.proposalTemplateId);
