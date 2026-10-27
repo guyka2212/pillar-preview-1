@@ -22,6 +22,9 @@
   - The LLM only rephrases the orchestrator's planned line; `validateReply()` rejects wrong actions,
     sales pressure, >1 question, new numbers and instruction-like output, falling back to the planned line.
   - Hebrew TTS quality depends on the voices installed on the device; STT needs Chrome/Edge.
-- [ ] Step 5 – Phase D: simulator, reports, Barry's interface
+- [x] Step 5 – Phase D: simulator, reports, Barry's interface
+  - Meeting scheduling is a placeholder link until a scheduling tool is chosen.
+  - Leads live in a local handling queue; CRM handoff waits on the CRM decision.
+  - PDF export uses the browser's print-to-PDF.
 - [ ] Step 6 – Phase E: testing, calibration, acceptance check
 - [ ] Step 7 – Final deployment check

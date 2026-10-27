@@ -129,8 +129,11 @@ export function allowedActions(s: FlowState): AgentAction[] {
       return ['reflect', 'ask'];
     case 'implicit':
       return ['reflect', 'ask', 'challenge'];
-    case 'idea':
-      return canProposeIdea(s) ? ['propose', 'reflect', 'ask'] : ['ask', 'reflect'];
+    case 'idea': {
+      // Numbers can arrive at any time once the simulator is open, so quantify stays available.
+      const base: AgentAction[] = canProposeIdea(s) ? ['propose', 'reflect', 'ask'] : ['ask', 'reflect'];
+      return canOpenSimulator(s) ? [...base, 'quantify'] : base;
+    }
     case 'quantify':
       return canOpenSimulator(s) ? ['quantify', 'reflect', 'ask'] : ['ask'];
     case 'selection':
