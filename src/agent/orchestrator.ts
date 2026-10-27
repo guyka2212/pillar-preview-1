@@ -209,7 +209,8 @@ function closingText(a: Assessment): string {
 }
 
 function openingText(c: BusinessCase): string {
-  const fact = c.facts.find((f) => !f.flagged && (f.category === 'profile' || f.category === 'product' || f.category === 'process'));
+  const clean = c.facts.filter((f) => !f.flagged);
+  const fact = clean.find((f) => f.category === 'profile' || f.category === 'product' || f.category === 'process') ?? clean[0];
   const learned = fact ? `לפני השיחה עברתי על החומרים, וקראתי ש${fact.text.replace(/^אנחנו\s*/, 'אתם ').replace(/[.!]$/, '')}.` : 'לא היה לי הרבה מידע מראש, אז אשמח ללמוד ממך.';
   return `שלום, אני הסוכן של Pillar. ${learned} חשוב לי לומר: אני לא כאן כדי למכור כלי, אלא כדי לבדוק יחד אם יש שלוש הזדמנויות שבאמת שוות משהו לעסק. התמונה הראשונית שלי נכונה?`;
 }
@@ -325,11 +326,11 @@ function planTurn(c: BusinessCase, a: Assessment, text: string, sig: Signals, mo
     const tail = need.length ? ` כדי לחשב חסרים עוד: ${need.join(' ו')}. זו תהיה הנחה שלך, לא עובדה — מה נראה לך סביר?` : ' החישוב בסימולטור מתעדכן, וכל הנחה אפשר לשנות.';
     return finish(c, a, { action: 'quantify', say: `רשמתי: ${numbers}.${tail}` });
   }
-  if (sig.uncertainty && (stage === 'quantify' || stage === 'selection')) {
-    return finish(c, a, {
-      action: 'reflect',
-      say: 'זה בסדר גמור. בלי מספרים לא אחשב החזר השקעה — אסמן את זה כפער פתוח, ואפשר להשלים בסימולטור כשיהיה מידע. רוצה שנמשיך לכיוון אחר בינתיים?',
-    });
+  const noNumbers = 'זה בסדר גמור. בלי מספרים לא אחשב החזר השקעה — אסמן את זה כפער פתוח, ואפשר להשלים בסימולטור כשיהיה מידע.';
+  if (sig.uncertainty && (stage === 'quantify' || stage === 'selection' || stage === 'idea')) {
+    if (!askedBefore(a, noNumbers)) return finish(c, a, { action: 'reflect', say: `${noNumbers} רוצה שנמשיך לכיוון אחר בינתיים?` });
+    // Said once already: don't repeat it, just move the conversation on.
+    return finish(c, a, { action: 'summarize', say: 'מובן, נשאיר את המספרים פתוחים. רוצה שנבדוק כיוון אחר, או שנסכם את מה שיש?' });
   }
 
   switch (stage) {

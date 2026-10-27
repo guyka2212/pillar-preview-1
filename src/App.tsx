@@ -1,6 +1,7 @@
 import { NavLink, Route, Routes } from 'react-router-dom';
 import CaseDetail from './pages/CaseDetail';
 import Cases from './pages/Cases';
+import Evaluation from './pages/Evaluation';
 import Home from './pages/Home';
 import Knowledge from './pages/Knowledge';
 import Leads from './pages/Leads';
@@ -14,6 +15,7 @@ const NAV = [
   { to: '/cases', label: 'תיקים (בארי)' },
   { to: '/leads', label: 'לידים' },
   { to: '/knowledge', label: 'בסיס ידע' },
+  { to: '/eval', label: 'הערכה' },
   { to: '/settings', label: 'הגדרות' },
 ];
 
@@ -41,6 +43,7 @@ export default function App() {
           <Route path="/case/:id/simulator" element={<Simulator />} />
           <Route path="/case/:id/report" element={<Report />} />
           <Route path="/leads" element={<Leads />} />
+          <Route path="/eval" element={<Evaluation />} />
           <Route path="/knowledge" element={<Knowledge />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Home />} />
